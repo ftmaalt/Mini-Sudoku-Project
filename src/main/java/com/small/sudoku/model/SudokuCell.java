@@ -14,10 +14,9 @@ public class SudokuCell {
     private boolean isFixed; // if true then the cell cannot be changed
     private int[] validInput={0,1,2,3,4,5,6,7,8,9};
 
-    public SudokuCell(int row, int col, int[] guesses, int value) {
+    public SudokuCell(int row, int col, int value) {
         this.row = row;
         this.col = col;
-        this.guesses = guesses;
         for (int i =0; i< validInput.length; i++) {
             if (value == validInput[i])
                 this.value = value;
