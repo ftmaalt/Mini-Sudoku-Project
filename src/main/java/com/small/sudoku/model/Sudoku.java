@@ -8,6 +8,6 @@ public class Sudoku {
         board= new SudokuCell[9][9];
     }
 
-    ~
+
 
 }
