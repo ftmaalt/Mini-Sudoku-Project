@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Getter
 public class SudokuCell {
-    @Setter
     private int row;
     private int col;
     private int[] guesses; // possible correct values for the cell
     @Setter
     private int value;
+    @Setter
     private boolean isFixed; // if true then the cell cannot be changed
     private int[] validInput={0,1,2,3,4,5,6,7,8,9};
 
