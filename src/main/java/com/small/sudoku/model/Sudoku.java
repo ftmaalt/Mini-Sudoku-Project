@@ -1,6 +1,7 @@
 package com.small.sudoku.model;
 import com.small.sudoku.exception.InvalidCharacterException;
 import com.small.sudoku.exception.MissingFileException;
+import com.small.sudoku.model.emun.Difficulty;
 import com.small.sudoku.solver.SudokuSolver;
 import lombok.Data;
 
@@ -26,9 +27,20 @@ public class Sudoku {
             }
         }
     }
-    public void loadPuzzle(String filename) {
+    public void loadPuzzle(String filename, Difficulty difficulty) {
+        String filePath="";
+        if (difficulty.equals(Difficulty.EASY)){
+            filePath = "samples/unsolved/easy/" + filename;
+        }else if (difficulty.equals(Difficulty.MEDIUM)){
+            filePath = "samples/unsolved/medium/" + filename;
+        }else if(difficulty.equals(Difficulty.HARD)){
+            filePath = "samples/unsolved/hard/" + filename;
+        } else if(difficulty.equals(Difficulty.MASTER)){
+            filePath = "samples/unsolved/master/" + filename;
+        }else {
+            throw new MissingFileException("No puzzles with difficulty are found");
+        }
 
-        String filePath = "samples/unsolved/" + filename;
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
         if (inputStream == null) {
             throw new MissingFileException("Puzzle not found: " + filename);
@@ -95,7 +107,7 @@ public class Sudoku {
     }
     public static void main(String[] args) {
         Sudoku sudoku = new Sudoku();
-        sudoku.loadPuzzle("puzzle1.txt");
+        sudoku.loadPuzzle("puzzle1.txt", Difficulty.EASY);
         System.out.println("Original Puzzle:");
         sudoku.printBoard();
         SudokuSolver solver = new SudokuSolver();
