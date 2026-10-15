@@ -1,6 +1,7 @@
 package com.small.sudoku.model;
 import com.small.sudoku.exception.InvalidCharacterException;
 import com.small.sudoku.exception.MissingFileException;
+import com.small.sudoku.generator.SudokuGenerator;
 import com.small.sudoku.model.emun.Difficulty;
 import com.small.sudoku.solver.SudokuSolver;
 import lombok.Data;
@@ -106,22 +107,34 @@ public class Sudoku {
         System.out.println("Solution saved successfully to: " + outputPath);
     }
     public static void main(String[] args) {
-        Sudoku sudoku = new Sudoku();
-        sudoku.loadPuzzle("puzzle1.txt", Difficulty.EASY);
-        System.out.println("Original Puzzle:");
-        sudoku.printBoard();
-        SudokuSolver solver = new SudokuSolver();
+//        Sudoku sudoku = new Sudoku();
+//        sudoku.loadPuzzle("puzzle1.txt", Difficulty.EASY);
+//        System.out.println("Original Puzzle:");
+//        sudoku.printBoard();
+//        SudokuSolver solver = new SudokuSolver();
+//
+//        if (solver.solve(sudoku.getBoard())) {
+//            System.out.println("Solved Puzzle:");
+//            sudoku.printBoard();
+//            try {
+//                sudoku.saveSolution("puzzle1.txt");
+//            } catch (IOException e) {
+//                System.out.println("Error saving solution: " + e.getMessage());
+//            }
+//        } else {
+//            System.out.println("No solution found.");
+//        }
+//
+//
+        SudokuGenerator generator = new SudokuGenerator();
 
-        if (solver.solve(sudoku.getBoard())) {
-            System.out.println("Solved Puzzle:");
-            sudoku.printBoard();
-            try {
-                sudoku.saveSolution("puzzle1.txt");
-            } catch (IOException e) {
-                System.out.println("Error saving solution: " + e.getMessage());
-            }
-        } else {
-            System.out.println("No solution found.");
-        }
+        SudokuCell[][] generatedBoard =
+                generator.generatePuzzle(Difficulty.MASTER);
+
+        Sudoku sudoku = new Sudoku();
+        sudoku.setBoard(generatedBoard);
+
+        System.out.println("Generated MASTER Puzzle:");
+        sudoku.printBoard();
     }
 }
