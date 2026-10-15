@@ -56,21 +56,34 @@ public class SudokuGenerator {
             case HARD -> 50;
             case MASTER -> 55;
         };
-        while (removed < cellsToRemove) {
-            int row = random.nextInt(9);
-            int col = random.nextInt(9);
+        List<Integer> positions = new ArrayList<>();
+        for (int i = 0; i < 81; i++) {
+            positions.add(i);
+        }
+        Collections.shuffle(positions, random);
+        for (int position : positions) {
+            if (removed >= cellsToRemove) {
+                break;
+            }
+            int row = position / 9;
+            int col = position % 9;
             if (board[row][col].getValue() != 0) {
+                int originalValue = board[row][col].getValue();
                 board[row][col].setValue(0);
-                removed++;
+                int solutions = solver.countSolutions(board, 2);
+                if (solutions == 1) {
+                    removed++;
+                } else {
+                    board[row][col].setValue(originalValue);
+                }
             }
         }
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col].getValue() != 0) {
-                    board[row][col].setFixed(true);
-                }
+                board[row][col].setFixed(board[row][col].getValue() != 0);
             }
         }
+
         return board;
     }
 }

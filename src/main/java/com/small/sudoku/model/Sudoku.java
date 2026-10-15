@@ -127,14 +127,21 @@ public class Sudoku {
 //
 //
         SudokuGenerator generator = new SudokuGenerator();
+        SudokuSolver solver = new SudokuSolver();
 
-        SudokuCell[][] generatedBoard =
-                generator.generatePuzzle(Difficulty.MASTER);
+        SudokuCell[][] board = generator.generatePuzzle(Difficulty.EASY);
 
-        Sudoku sudoku = new Sudoku();
-        sudoku.setBoard(generatedBoard);
+        int emptyCells = 0;
 
-        System.out.println("Generated MASTER Puzzle:");
-        sudoku.printBoard();
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col].getValue() == 0) {
+                    emptyCells++;
+                }
+            }
+        }
+
+        System.out.println("Empty cells: " + emptyCells);
+        System.out.println("Solutions: " + solver.countSolutions(board, 2));
     }
 }
