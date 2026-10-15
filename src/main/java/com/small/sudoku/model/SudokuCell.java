@@ -7,7 +7,7 @@ import lombok.Setter;
 public class SudokuCell {
     private int row;
     private int col;
-    private int[] guesses; // possible correct values for the cell
+//    private int[] guesses; // possible correct values for the cell
     @Setter
     private int value;
     @Setter

@@ -1,4 +1,5 @@
 package com.small.sudoku.model;
+import com.small.sudoku.controller.GameController;
 import com.small.sudoku.exception.InvalidCharacterException;
 import com.small.sudoku.exception.MissingFileException;
 import com.small.sudoku.generator.SudokuGenerator;
@@ -16,8 +17,8 @@ public class Sudoku {
 
     private SudokuCell[][] board;
     private static final int SIZE = 9;
-    public static final String CYAN = "\u001B[36m";
-    private static final String GREEN = "\u001B[32m";
+    public static final String PINK = "\u001B[38;2;245;169;184m";
+    private static final String GREEN = "\u001B[38;2;154;181;126m";
     public static final String RESET = "\u001B[0m";
 
     public Sudoku(){
@@ -78,7 +79,7 @@ public class Sudoku {
                 if (!cell.isFixed() && cell.getValue() != 0) {
                     System.out.print(GREEN + cell.getValue() + RESET + " ");
                 } else if (cell.isFixed() && cell.getValue()!=0){
-                    System.out.print(CYAN+board[row][col].getValue() +" "+ RESET);
+                    System.out.print(PINK +board[row][col].getValue() +" "+ RESET);
                 }
                 else
                 System.out.print(board[row][col].getValue() +" ");
@@ -112,7 +113,6 @@ public class Sudoku {
 //        System.out.println("Original Puzzle:");
 //        sudoku.printBoard();
 //        SudokuSolver solver = new SudokuSolver();
-//
 //        if (solver.solve(sudoku.getBoard())) {
 //            System.out.println("Solved Puzzle:");
 //            sudoku.printBoard();
@@ -124,24 +124,10 @@ public class Sudoku {
 //        } else {
 //            System.out.println("No solution found.");
 //        }
-//
-//
-        SudokuGenerator generator = new SudokuGenerator();
-        SudokuSolver solver = new SudokuSolver();
 
-        SudokuCell[][] board = generator.generatePuzzle(Difficulty.EASY);
+    GameController gameController= new GameController();
+    gameController.start();
 
-        int emptyCells = 0;
 
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col].getValue() == 0) {
-                    emptyCells++;
-                }
-            }
-        }
-
-        System.out.println("Empty cells: " + emptyCells);
-        System.out.println("Solutions: " + solver.countSolutions(board, 2));
     }
 }
