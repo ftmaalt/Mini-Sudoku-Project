@@ -1,15 +1,23 @@
 package com.small.sudoku.model;
 import com.small.sudoku.exception.InvalidCharacterException;
 import com.small.sudoku.exception.MissingFileException;
+import com.small.sudoku.solver.SudokuSolver;
+import lombok.Data;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+@Data
 public class Sudoku {
+
     private SudokuCell[][] board;
     private static final int SIZE = 9;
     public static final String CYAN = "\u001B[36m";
+    private static final String GREEN = "\u001B[32m";
     public static final String RESET = "\u001B[0m";
+
     public Sudoku(){
         board= new SudokuCell[SIZE][SIZE];
         for(int row=0; row< board.length; row++){
@@ -28,7 +36,6 @@ public class Sudoku {
         try (BufferedReader puzzleReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             int row = 0;
-
             while ((line = puzzleReader.readLine()) != null) {
                 for (int col = 0; col < SIZE; col++) {
                     char number = line.charAt(col);
@@ -37,6 +44,7 @@ public class Sudoku {
                     }
                     int num = Character.getNumericValue(number);
                     board[row][col].setValue(num);
+                    board[row][col].setFixed(num != 0);
                 }
                 row++;
             }
@@ -53,8 +61,12 @@ public class Sudoku {
                 System.out.println(border);
             System.out.print("| ");
             for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col].getValue() !=0)
+                SudokuCell cell = board[row][col];
+                if (!cell.isFixed() && cell.getValue() != 0) {
+                    System.out.print(GREEN + cell.getValue() + RESET + " ");
+                } else if (cell.isFixed() && cell.getValue()!=0){
                     System.out.print(CYAN+board[row][col].getValue() +" "+ RESET);
+                }
                 else
                 System.out.print(board[row][col].getValue() +" ");
                 if ((col +1) %3 == 0)
@@ -62,12 +74,42 @@ public class Sudoku {
             }
             System.out.println();
         }
+        System.out.println(border);
+    }
 
 
+    public void saveSolution(String filename) throws IOException {
+        String solutionFilename = filename.replace(".txt", ".solution.txt");
+        Path outputDirectory = Path.of("solutions");
+        Files.createDirectories(outputDirectory);
+        Path outputPath = outputDirectory.resolve(solutionFilename);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath.toFile()))) {
+            for (int row = 0; row < board.length; row++) {
+                for (int col = 0; col < board[row].length; col++) {
+                    writer.write(String.valueOf(board[row][col].getValue()));
+                }
+                writer.newLine();
+            }
+        }
+        System.out.println("Solution saved successfully to: " + outputPath);
     }
     public static void main(String[] args) {
         Sudoku sudoku = new Sudoku();
         sudoku.loadPuzzle("puzzle1.txt");
+        System.out.println("Original Puzzle:");
         sudoku.printBoard();
+        SudokuSolver solver = new SudokuSolver();
+
+        if (solver.solve(sudoku.getBoard())) {
+            System.out.println("Solved Puzzle:");
+            sudoku.printBoard();
+            try {
+                sudoku.saveSolution("puzzle1.txt");
+            } catch (IOException e) {
+                System.out.println("Error saving solution: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No solution found.");
+        }
     }
 }

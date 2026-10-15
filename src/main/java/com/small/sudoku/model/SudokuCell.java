@@ -12,17 +12,14 @@ public class SudokuCell {
     private int value;
     @Setter
     private boolean isFixed; // if true then the cell cannot be changed
-    private int[] validInput={0,1,2,3,4,5,6,7,8,9};
 
     public SudokuCell(int row, int col, int value) {
         this.row = row;
         this.col = col;
-        for (int i =0; i< validInput.length; i++) {
-            if (value == validInput[i])
-                this.value = value;
-            else
+            if (value<=0 || value >9)
                 this.value = 0;
-        }
+            else
+                this.value = value;
         if (value == 0)
             this.isFixed= false;
         else
